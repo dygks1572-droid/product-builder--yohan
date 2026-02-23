@@ -1,11 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generate');
+    const themeToggle = document.getElementById('theme-toggle');
     const numbersDisplay = document.querySelectorAll('.number');
     const historyList = document.getElementById('history-list');
 
-    function getRandomColor() {
-        const colors = ['#fbc400', '#69c8f2', '#ff7272', '#aaa', '#b0d840'];
-        return colors[Math.floor(Math.random() * colors.length)];
+    // Theme Management
+    const currentTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    updateThemeIcon(currentTheme);
+
+    themeToggle.addEventListener('click', () => {
+        const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        updateThemeIcon(theme);
+    });
+
+    function updateThemeIcon(theme) {
+        themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
     }
 
     function generateLottoNumbers() {
@@ -45,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
         li.innerHTML = numbers.map(num => `<span class="small-ball" style="background-color: ${getBallColor(num)}">${num}</span>`).join('');
         historyList.prepend(li);
         
-        // Keep only last 10
         if (historyList.children.length > 10) {
             historyList.removeChild(historyList.lastChild);
         }
